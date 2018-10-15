@@ -1,0 +1,24 @@
+
+
+service: sls-email-reminders 
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  iamRolesStatements: 
+    - Effect: "Allow"
+      Action: 
+        - "ses:*"
+      Resource: 
+        - "*"
+
+functions: 
+  dailyReminder: 
+    handler: handler.sendRemainderDaily
+    events: 
+      - schedule: rate(1 day)
+  weekendReminder:
+    handler: handler.sendReminderWeekend
+    events: 
+      - schedule: cron(30 22 ? * SUN,SAT *)
+
